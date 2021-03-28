@@ -1,0 +1,19 @@
+{
+  "name": "db-cms-front",
+  "version": "0.0.1",
+  "description": "db cms front",
+  "main": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webbestmaster/db-cms-front.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/webbestmaster/db-cms-front/issues"
+  },
+  "homepage": "https://github.com/webbestmaster/db-cms-front#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
