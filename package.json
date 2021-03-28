@@ -17,6 +17,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "db-cms": "0.0.1"
+    "db-cms": "0.0.2"
   }
 }
