@@ -11,8 +11,15 @@ node_modules
 package-lock.json
 
 # dist
-# /dist/
+/dist
 
 # report
-/coverage-ts/
-/tsc-check/
+/coverage-ts
+
+# style's d.ts
+*.scss.d.ts
+
+# other
+.DS_Store
+
+.env
