@@ -1,17 +1,36 @@
-import React from 'react';
+/* global HTMLFormElement, alert */
+import React, {SyntheticEvent, useContext} from 'react';
+
+import {UserContextType} from '../../provider/user/user-context-type';
+import {UserContext} from '../../provider/user/c-user-context';
 
 export function LoginPage(): JSX.Element {
+    const providedUser = useContext<UserContextType>(UserContext);
+
+    function handleSubmit(evt: SyntheticEvent<HTMLFormElement>) {
+        evt.preventDefault();
+
+        const {currentTarget: form} = evt;
+
+        const {login, password} = form;
+
+        providedUser.login(login.value, password.value).catch(() => {
+            // eslint-disable-next-line no-alert
+            alert('wrong login or password');
+        });
+    }
+
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
             <input name="login" placeholder="login" type="text"/>
 
             <br/>
 
-            <input name="passoword" placeholder="password" type="text"/>
+            <input name="password" placeholder="password" type="text"/>
 
             <br/>
 
-            <input type="submit"/>
+            <input type="submit" value="login"/>
         </form>
     );
 }

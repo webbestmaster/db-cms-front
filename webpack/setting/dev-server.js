@@ -19,7 +19,7 @@ module.exports.devServer = {
     historyApiFallback: {
         disableDotRule: true,
     },
-    // writeToDisk: isBuildServer,
+    writeToDisk: true,
     // inline: false,
     // hot: true,
     // hotOnly: false,
