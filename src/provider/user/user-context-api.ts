@@ -8,3 +8,7 @@ export function login(userLogin: string, userPassword: string): Promise<UserType
         body: JSON.stringify({login: userLogin, password: userPassword}),
     });
 }
+
+export function getUser(): Promise<UserType> {
+    return fetchX<UserType>('/db-cms/api/auth/user');
+}

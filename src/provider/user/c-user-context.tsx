@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {UserContextType, UserType} from './user-context-type';
 import {defaultUserContextData} from './user-context-const';
-import {login} from './user-context-api';
+import {getUser, login} from './user-context-api';
 
 export const UserContext: React.Context<UserContextType> = React.createContext<UserContextType>(defaultUserContextData);
 
@@ -13,6 +13,14 @@ type PropsType = {
 export function UserProvider(props: PropsType): JSX.Element {
     const {children} = props;
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(defaultUserContextData.isLoggedIn);
+
+    useEffect(() => {
+        getUser()
+            .then(() => {
+                setIsLoggedIn(true);
+            })
+            .catch(console.log);
+    }, []);
 
     const providedLogin = useCallback((useLogin: string, password: string): Promise<UserType> => {
         return login(useLogin, password).then(
