@@ -28,11 +28,11 @@ module.exports.devServer = {
     //     '/reports/': mainProxyUrlSetting,
     // },
     proxy: {
-        '/op/api': {
-            secure: false,
-            target: 'https://cp.rocketdata.io',
-            changeOrigin: true,
-            cookieDomainRewrite: 'localhost',
-        },
+        // '/op/api': {
+        //     secure: false,
+        //     target: 'https://cp.rocketdata.io',
+        //     changeOrigin: true,
+        //     cookieDomainRewrite: 'localhost',
+        // },
     },
 };
