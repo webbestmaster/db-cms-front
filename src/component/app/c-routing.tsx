@@ -7,6 +7,7 @@ import {ErrorPage404} from '../../page/error-page-404/c-error-page-404';
 import {UserContext} from '../../provider/user/c-user-context';
 import {UserContextType} from '../../provider/user/user-context-type';
 import {WelcomePage} from '../../page/welcome-page/c-welcome-page';
+import {UserPage} from '../../page/user-page/c-user-page';
 
 export function Routing(): JSX.Element {
     const providedUser = useContext<UserContextType>(UserContext);
@@ -19,6 +20,8 @@ export function Routing(): JSX.Element {
         <BrowserRouter>
             <Switch>
                 <Route component={WelcomePage} exact path={appRoute.root.path}/>
+
+                <Route component={UserPage} exact path={appRoute.user.path}/>
 
                 <Route component={ErrorPage404}/>
             </Switch>

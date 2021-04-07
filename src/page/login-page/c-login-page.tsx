@@ -26,7 +26,7 @@ export function LoginPage(): JSX.Element {
 
             <br/>
 
-            <input name="password" placeholder="password" type="text"/>
+            <input name="password" placeholder="password" type="password"/>
 
             <br/>
 
