@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {CrudResponseType, makeDocument} from '../../api/api';
+import {useDocumentHook} from '../../api/api-hook';
 
 type UserModelType = {
     userId: string;
@@ -9,11 +9,15 @@ type UserModelType = {
 };
 
 export function UserPage(): JSX.Element {
+    const {createDocument, isInProgress} = useDocumentHook<UserModelType>();
+
+    console.log('isInProgress', isInProgress);
+
     return (
         <div>
             <button
                 onClick={() => {
-                    makeDocument<UserModelType>('user-model', {
+                    createDocument('user-model', {
                         userId: String(Date.now()),
                         password: 'pass',
                         login: String(Date.now() + '-my-login'),
@@ -21,7 +25,9 @@ export function UserPage(): JSX.Element {
                         .then((user: UserModelType) => {
                             console.log(user);
                         })
-                        .catch(console.log);
+                        .catch((error: Error) => {
+                            console.error(error);
+                        });
                     console.info('post request to create user, after that refresh table');
                 }}
                 type="button"

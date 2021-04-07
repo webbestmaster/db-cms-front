@@ -5,7 +5,7 @@ export type CrudResponseType<ModelType> = {
     size: number;
 };
 
-export function makeDocument<ModelType>(modelId: string, modelData: ModelType): Promise<ModelType> {
+export function createDocument<ModelType>(modelId: string, modelData: ModelType): Promise<ModelType> {
     return fetchX<CrudResponseType<ModelType>>('/db-cms/api/crud/create/' + modelId, {
         method: 'POST',
         body: JSON.stringify(modelData),

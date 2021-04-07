@@ -1,56 +1,56 @@
-/* global Buffer */
+// import {ShortLocaleNameType} from '../provider/locale/locale-context-type';
 
-// import crypto from 'crypto';
+export function getHash(data: Record<string, unknown> | string | Array<unknown>): string {
+    let result = 0;
+    const fullString: string = typeof data === 'string' ? data : JSON.stringify(data, null, 0);
+    const stringLength = fullString.length;
 
-// import {serverConst} from '../data-base-const';
+    // eslint-disable-next-line no-loops/no-loops
+    for (let index = 0; index < stringLength; index += 1) {
+        result = Math.trunc(Math.imul(31, result) + fullString.charCodeAt(index));
+    }
 
-// const algorithm = 'aes-256-ctr';
-// const randomBytes = crypto.randomBytes(16);
-
-// export function getRandomString(): string {
-//     return crypto.randomBytes(16).toString('hex');
-// }
-
-/*
-export function getHash(value: string): string {
-    const sha256PasswordHmac = crypto.createHmac('sha256', serverConst.secretKey);
-
-    return sha256PasswordHmac.update(value).digest('hex');
-}
-*/
-
-/*
-export function encrypt(text: string): string {
-    const cipher = crypto.createCipheriv(algorithm, serverConst.secretKey, randomBytes);
-
-    return Buffer.concat([cipher.update(text), cipher.final()]).toString('hex');
+    return result.toString(32);
 }
 
-export function decrypt(hash: string): string {
-    const decipher = crypto.createDecipheriv(
-        algorithm,
-        serverConst.secretKey,
-        Buffer.from(randomBytes.toString('hex'), 'hex')
-    );
-
-    return Buffer.concat([decipher.update(Buffer.from(hash, 'hex')), decipher.final()]).toString();
+export function getRandomString(): string {
+    return getHash(String(Date.now() + Math.random()));
 }
-*/
 
 /*
-export function parseCookie(value: string): Record<string, string> {
-    const result: Record<string, string> = {};
 
-    value
-        .split(';')
-        .map((keyValue: string): string => keyValue.trim())
-        .filter(Boolean)
-        .forEach((keyValue: string) => {
-            const [cookieKey = '', cookieValue = ''] = keyValue.split('=');
+export function findString(input: string, searchQuery: string, flags: '' | 'g' | 'gi' = 'gi'): Array<string> {
+    const result: Array<string> = [];
+    const searchQueryLength = searchQuery.length;
 
-            result[cookieKey.trim()] = cookieValue.trim();
-        });
+    const splitRegExp = new RegExp('(?=' + searchQuery + ')', flags);
+    const equalRegExp = new RegExp('^' + searchQuery, flags);
+
+    const splitLeftList: Array<string> = input.split(splitRegExp);
+
+    // eslint-disable-next-line no-loops/no-loops
+    for (const leftSplitPart of splitLeftList) {
+        if (equalRegExp.test(leftSplitPart)) {
+            result.push(leftSplitPart.slice(0, searchQueryLength), leftSplitPart.slice(searchQueryLength));
+        } else {
+            result.push(leftSplitPart);
+        }
+    }
 
     return result;
+}
+*/
+/*
+
+export function sortCompare(shortLocaleName: ShortLocaleNameType, stringA: string, stringB: string): number {
+    return new Intl.Collator(shortLocaleName).compare(stringA, stringB);
+}
+
+export function toTrimmedString(value: unknown): string {
+    if (value === null || typeof value === 'undefined') {
+        return '';
+    }
+
+    return String(value).trim();
 }
 */
