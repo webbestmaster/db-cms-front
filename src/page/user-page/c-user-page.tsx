@@ -13,10 +13,6 @@ export function UserPage(): JSX.Element {
 
     console.log('isInProgress', isInProgress);
 
-    setTimeout(() => {
-        readDocumentById('user-model', 'sdss').then(console.log);
-    }, 3000);
-
     return (
         <div>
             <button
