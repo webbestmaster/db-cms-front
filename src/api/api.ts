@@ -1,11 +1,13 @@
+/* global URLSearchParams */
+
 import {fetchX} from '../util/fetch';
 
-import {ModelNameIdType} from './api-hook-type';
-
-export type CrudResponseType<ModelType> = {
-    data: ModelType | Array<ModelType> | null;
-    size: number;
-};
+import {
+    CrudResponseType,
+    ModelNameIdType,
+    ReadDocumentListParametersType,
+    ReadDocumentListResultType,
+} from './api-hook-type';
 
 export function createDocument<ModelType>(modelNameId: ModelNameIdType, modelData: ModelType): Promise<ModelType> {
     return fetchX<CrudResponseType<ModelType>>('/db-cms/api/crud/create/' + modelNameId, {
@@ -44,6 +46,39 @@ export function readDocumentById<ModelType>(modelNameId: ModelNameIdType, object
             }
 
             return data;
+        }
+    );
+}
+
+export function readDocumentList<ModelType>(
+    modelNameId: ModelNameIdType,
+    parameters: ReadDocumentListParametersType
+): Promise<ReadDocumentListResultType<ModelType>> {
+    // examples:
+    // 1 - '/api/crud/read-list/user-model/1/4?sort[password]=-1&sort[userId]=1'
+    // 2 - `/api/crud/read-list/user-model/0/4?sort[password]=-1&sort[userId]=1&find[login]=${JSON.stringify('админ')}`
+    // 3 - `/api/crud/read-list/user-model/0/4?sort[password]=-1&sort[userId]=1&find[login]=${JSON.stringify({"$regex": "адм","$options": "i"})}`,
+
+    const {pageIndex, objectsPerPage, queryParameters} = parameters;
+
+    const queryParametersAsString = queryParameters ? '?' + new URLSearchParams(queryParameters).toString() : '';
+    const url = `/db-cms/api/crud/read-list/${modelNameId}/${pageIndex}/${objectsPerPage}${queryParametersAsString}`;
+
+    return fetchX<CrudResponseType<ModelType>>(url).then(
+        (result: CrudResponseType<ModelType>): ReadDocumentListResultType<ModelType> => {
+            const {data, size} = result;
+
+            if (!Array.isArray(data)) {
+                throw new TypeError(JSON.stringify(result));
+            }
+
+            if (!data) {
+                throw new Error(
+                    `Can not get model list, modelNameId: ${modelNameId}, parameters: ${JSON.stringify(parameters)}`
+                );
+            }
+
+            return {data, size};
         }
     );
 }

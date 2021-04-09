@@ -1,9 +1,15 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useState, useMemo} from 'react';
 
-import {useRefreshId} from '../util/hook';
+// import {useRefreshId} from '../util/hook';
 
-import {ModelNameIdType, UseHookType} from './api-hook-type';
-import {createDocument, readDocumentById} from './api';
+import {
+    DocumentListType,
+    ModelNameIdType,
+    ReadDocumentListParametersType,
+    ReadDocumentListResultType,
+    UseHookType,
+} from './api-hook-type';
+import {createDocument, readDocumentById, readDocumentList} from './api';
 
 type StateHooksType<DateType> = {
     isInProgress: boolean;
@@ -12,8 +18,8 @@ type StateHooksType<DateType> = {
     setProcessError: (processError: Error | null) => void;
     result: DateType | null;
     setResult: (result: DateType | null) => void;
-    refreshId: string;
-    refresh: () => void;
+    // refreshId: string;
+    // refresh: () => void;
     reset: () => void;
 };
 
@@ -21,7 +27,7 @@ export function useApiHooks<DateType>(): StateHooksType<DateType> {
     const [isInProgress, setIsInProgress] = useState<boolean>(false);
     const [processError, setProcessError] = useState<Error | null>(null);
     const [result, setResult] = useState<DateType | null>(null);
-    const {refreshId, refresh} = useRefreshId();
+    // const {refreshId, refresh} = useRefreshId();
 
     const reset = useCallback(() => {
         setProcessError(null);
@@ -29,26 +35,30 @@ export function useApiHooks<DateType>(): StateHooksType<DateType> {
         setResult(null);
     }, [setProcessError, setIsInProgress, setResult]);
 
-    return {
-        isInProgress,
-        setIsInProgress,
-        processError,
-        setProcessError,
-        result,
-        setResult,
-        refreshId,
-        refresh,
-        reset,
-    };
+    return useMemo((): StateHooksType<DateType> => {
+        return {
+            isInProgress,
+            setIsInProgress,
+            processError,
+            setProcessError,
+            result,
+            setResult,
+            // refreshId,
+            // refresh,
+            reset,
+        };
+    }, [isInProgress, processError, result, reset]);
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-type CRUDMethodType<CreatedModelType> = {
-    createDocument: (modelNameId: ModelNameIdType, modelData: CreatedModelType) => Promise<CreatedModelType>;
-    readDocumentById: (modelNameId: ModelNameIdType, objectId: string) => Promise<CreatedModelType>;
+type CRUDMethodType<ModelDataType> = {
+    createDocument: (modelNameId: ModelNameIdType, modelData: ModelDataType) => Promise<ModelDataType>;
+    readDocumentById: (modelNameId: ModelNameIdType, objectId: string) => Promise<ModelDataType>;
 };
 
-export function useDocumentHook<ModelType>(): UseHookType<ModelType> & CRUDMethodType<ModelType> {
+type UseDocumentHookType<HookModelType> = UseHookType<HookModelType> & CRUDMethodType<HookModelType>;
+
+export function useDocumentHook<ModelType>(): UseDocumentHookType<ModelType> {
     const {
         isInProgress,
         setIsInProgress,
@@ -56,53 +66,121 @@ export function useDocumentHook<ModelType>(): UseHookType<ModelType> & CRUDMetho
         setProcessError,
         result,
         setResult,
-        refreshId,
-        refresh,
+        // refreshId,
+        // refresh,
         reset,
     } = useApiHooks<ModelType>();
 
-    function createDocumentInHook(modelNameId: ModelNameIdType, modelData: ModelType): Promise<ModelType> {
-        setIsInProgress(true);
+    const createDocumentInHook = useCallback(
+        (modelNameId: ModelNameIdType, modelData: ModelType): Promise<ModelType> => {
+            setIsInProgress(true);
 
-        return createDocument<ModelType>(modelNameId, modelData)
-            .then(
-                (data: ModelType): ModelType => {
-                    setResult(data);
-                    return data;
-                }
-            )
-            .finally(() => setIsInProgress(false))
-            .catch((error: Error) => {
-                setProcessError(error);
-                throw error;
-            });
-    }
+            return createDocument<ModelType>(modelNameId, modelData)
+                .then(
+                    (data: ModelType): ModelType => {
+                        setResult(data);
+                        return data;
+                    }
+                )
+                .finally(() => setIsInProgress(false))
+                .catch((error: Error) => {
+                    setProcessError(error);
+                    throw error;
+                });
+        },
+        [setIsInProgress, setProcessError, setResult]
+    );
 
-    function readDocumentByIdInHook(modelNameId: ModelNameIdType, objectId: string): Promise<ModelType> {
-        setIsInProgress(true);
+    const readDocumentByIdInHook = useCallback(
+        (modelNameId: ModelNameIdType, objectId: string): Promise<ModelType> => {
+            setIsInProgress(true);
 
-        return readDocumentById<ModelType>(modelNameId, objectId)
-            .then(
-                (data: ModelType): ModelType => {
-                    setResult(data);
-                    return data;
-                }
-            )
-            .finally(() => setIsInProgress(false))
-            .catch((error: Error) => {
-                setProcessError(error);
-                throw error;
-            });
-    }
+            return readDocumentById<ModelType>(modelNameId, objectId)
+                .then(
+                    (data: ModelType): ModelType => {
+                        setResult(data);
+                        return data;
+                    }
+                )
+                .finally(() => setIsInProgress(false))
+                .catch((error: Error) => {
+                    setProcessError(error);
+                    throw error;
+                });
+        },
+        [setIsInProgress, setProcessError, setResult]
+    );
 
-    return {
+    return useMemo((): UseDocumentHookType<ModelType> => {
+        return {
+            isInProgress,
+            processError,
+            result,
+            // refresh,
+            // refreshId,
+            reset,
+            createDocument: createDocumentInHook,
+            readDocumentById: readDocumentByIdInHook,
+        };
+    }, [createDocumentInHook, isInProgress, processError, readDocumentByIdInHook, reset, result]);
+}
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+type CRUDListMethodType<ModelDataType> = {
+    readDocumentList: (
+        modelNameId: ModelNameIdType,
+        parameters: ReadDocumentListParametersType,
+    ) => Promise<ReadDocumentListResultType<ModelDataType>>;
+};
+
+type UseDocumentListHookType<HookModelType> = UseHookType<DocumentListType<HookModelType>> &
+    CRUDListMethodType<HookModelType>;
+
+export function useDocumentListHook<ModelType>(): UseDocumentListHookType<ModelType> {
+    const {
         isInProgress,
+        setIsInProgress,
         processError,
+        setProcessError,
         result,
-        refresh,
-        refreshId,
+        setResult,
+        // refreshId,
+        // refresh,
         reset,
-        createDocument: createDocumentInHook,
-        readDocumentById: readDocumentByIdInHook,
-    };
+    } = useApiHooks<DocumentListType<ModelType>>();
+
+    const readDocumentListInHook = useCallback(
+        (
+            modelNameId: ModelNameIdType,
+            parameters: ReadDocumentListParametersType
+        ): Promise<ReadDocumentListResultType<ModelType>> => {
+            setIsInProgress(true);
+
+            return readDocumentList<ModelType>(modelNameId, parameters)
+                .then(
+                    (data: ReadDocumentListResultType<ModelType>): ReadDocumentListResultType<ModelType> => {
+                        setResult(data);
+                        return data;
+                    }
+                )
+                .finally(() => setIsInProgress(false))
+                .catch((error: Error) => {
+                    setProcessError(error);
+                    throw error;
+                });
+        },
+        [setIsInProgress, setProcessError, setResult]
+    );
+
+    return useMemo((): UseDocumentListHookType<ModelType> => {
+        return {
+            isInProgress,
+            processError,
+            result,
+            // refresh,
+            // refreshId,
+            reset,
+            readDocumentList: readDocumentListInHook,
+        };
+    }, [isInProgress, processError, readDocumentListInHook, reset, result]);
 }

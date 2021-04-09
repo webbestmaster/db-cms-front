@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
-import {useDocumentHook} from '../../api/api-hook';
+import {useDocumentHook, useDocumentListHook} from '../../api/api-hook';
 
 type UserModelType = {
     userId: string;
@@ -9,19 +9,26 @@ type UserModelType = {
 };
 
 export function UserPage(): JSX.Element {
-    const {createDocument, isInProgress, readDocumentById} = useDocumentHook<UserModelType>();
+    const documentHook = useDocumentHook<UserModelType>();
+    const {readDocumentList, result: documentList} = useDocumentListHook<UserModelType>();
 
-    console.log('isInProgress', isInProgress);
+    console.log('documentHook.isInProgress', documentHook.isInProgress);
+    console.log('documentListHook.isInProgress', readDocumentList);
+
+    useEffect(() => {
+        readDocumentList('user-model', {pageIndex: 0, objectsPerPage: 5, queryParameters: null});
+    }, [readDocumentList]);
 
     return (
         <div>
             <button
                 onClick={() => {
-                    createDocument('user-model', {
-                        userId: String(Date.now()),
-                        password: 'pass',
-                        login: String(Date.now() + '-my-login'),
-                    })
+                    documentHook
+                        .createDocument('user-model', {
+                            userId: String(Date.now()),
+                            password: 'pass',
+                            login: String(Date.now() + '-my-login'),
+                        })
                         .then((user: UserModelType) => {
                             console.log(user);
                         })
@@ -37,6 +44,10 @@ export function UserPage(): JSX.Element {
             </button>
 
             <h1>table with users</h1>
+
+            <div>
+                <pre>{JSON.stringify(documentList, null, 4)}</pre>
+            </div>
         </div>
     );
 }
