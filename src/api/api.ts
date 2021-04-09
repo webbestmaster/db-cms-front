@@ -61,7 +61,10 @@ export function readDocumentList<ModelType>(
 
     const {pageIndex, pageSize, queryParameters} = parameters;
 
-    const queryParametersAsString = queryParameters ? '?' + new URLSearchParams(queryParameters).toString() : '';
+    const queryParametersAsString
+        = queryParameters && Object.keys(queryParameters).length > 0
+            ? '?' + new URLSearchParams(queryParameters).toString()
+            : '';
     const url = `/db-cms/api/crud/read-list/${modelNameId}/${pageIndex}/${pageSize}${queryParametersAsString}`;
 
     return fetchX<CrudResponseType<ModelType>>(url).then(

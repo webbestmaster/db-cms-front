@@ -2,7 +2,7 @@ import React, {useEffect, useState, useCallback} from 'react';
 import {Transfer, Switch, Table, TablePaginationConfig, Checkbox, Select} from 'antd';
 
 import {useDocumentHook, useDocumentListHook} from '../../api/api-hook';
-import {useRefreshId} from '../../util/hook';
+// import {useRefreshId} from '../../util/hook';
 
 type UserModelType = {
     userId: string;
@@ -12,7 +12,7 @@ type UserModelType = {
 
 export function UserPage(): JSX.Element {
     const documentHook = useDocumentHook<UserModelType>();
-    const {refreshId, refresh} = useRefreshId();
+    // const {refreshId, refresh} = useRefreshId();
 
     const {
         readDocumentList,
@@ -20,6 +20,7 @@ export function UserPage(): JSX.Element {
         isInProgress: isInProgressDocumentList,
     } = useDocumentListHook<UserModelType>();
     const [pagination, setPagination] = useState<TablePaginationConfig>({current: 1, pageSize: 10});
+    const [sorting, setSorting] = useState<{field: string; order: 1 | -1}>({field: 'userId', order: 1});
 
     console.log('documentHook.isInProgress', documentHook.isInProgress);
     console.log('documentListHook.isInProgress', isInProgressDocumentList);
@@ -32,9 +33,9 @@ export function UserPage(): JSX.Element {
         readDocumentList('user-model', {
             pageIndex: Number(pagination.current) - 1,
             pageSize: Number(pagination.pageSize),
-            queryParameters: {'sort[userId]': '-1', refreshId},
+            queryParameters: {['sort[' + sorting.field + ']']: `${sorting.order}`},
         });
-    }, [readDocumentList, pagination, refreshId]);
+    }, [readDocumentList, pagination, sorting]);
 
     const onChange = useCallback(
         (newPagination, newFilters, newSorter, newExtra) => {
@@ -43,6 +44,14 @@ export function UserPage(): JSX.Element {
             console.log('newPagination', newPagination);
             console.log('newFilters', newFilters);
             console.log('newSorter', newSorter);
+
+            // setSorting({field: newSorter.field, order: newSorter.order === 'descend' ? 1 : -1});
+
+            // const isAscend = newSorter.order === 'ascend';
+            // const isDescend = newSorter.order === 'descend';
+
+            setSorting({field: newSorter.field, order: newSorter.order === 'descend' ? -1 : 1});
+
             console.log('newExtra', newExtra);
             console.log('-----------');
         },
@@ -61,7 +70,8 @@ export function UserPage(): JSX.Element {
                         })
                         .then((user: UserModelType) => {
                             console.log(user);
-                            refresh();
+                            setSorting({field: 'userId', order: -1});
+                            // refresh();
                         })
                         .catch((error: Error) => {
                             console.error(error);
@@ -82,14 +92,14 @@ export function UserPage(): JSX.Element {
             </div>
 */}
 
-            <Table<{id: string; name: string; key: string}>
+            <Table<{userId: string; login: string; key: string}>
                 columns={[
-                    {title: 'ID', dataIndex: 'id', align: 'left'},
-                    {title: 'Name', dataIndex: 'name', align: 'left'},
+                    {title: 'ID', dataIndex: 'userId', align: 'left', sorter: {}},
+                    {title: 'Name', dataIndex: 'login', align: 'left', sorter: {}},
                 ]}
                 dataSource={resultDocumentList?.data.map(user => ({
-                    id: user.userId,
-                    name: user.login,
+                    userId: user.userId,
+                    login: user.login,
                     key: user.userId,
                 }))}
                 loading={isInProgressDocumentList}
