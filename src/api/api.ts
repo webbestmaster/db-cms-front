@@ -59,10 +59,10 @@ export function readDocumentList<ModelType>(
     // 2 - `/api/crud/read-list/user-model/0/4?sort[password]=-1&sort[userId]=1&find[login]=${JSON.stringify('админ')}`
     // 3 - `/api/crud/read-list/user-model/0/4?sort[password]=-1&sort[userId]=1&find[login]=${JSON.stringify({"$regex": "адм","$options": "i"})}`,
 
-    const {pageIndex, objectsPerPage, queryParameters} = parameters;
+    const {pageIndex, pageSize, queryParameters} = parameters;
 
     const queryParametersAsString = queryParameters ? '?' + new URLSearchParams(queryParameters).toString() : '';
-    const url = `/db-cms/api/crud/read-list/${modelNameId}/${pageIndex}/${objectsPerPage}${queryParametersAsString}`;
+    const url = `/db-cms/api/crud/read-list/${modelNameId}/${pageIndex}/${pageSize}${queryParametersAsString}`;
 
     return fetchX<CrudResponseType<ModelType>>(url).then(
         (result: CrudResponseType<ModelType>): ReadDocumentListResultType<ModelType> => {

@@ -7,7 +7,7 @@ export type CrudResponseType<ModelType> = {
 
 export type ReadDocumentListParametersType = {
     pageIndex: number;
-    objectsPerPage: number;
+    pageSize: number;
     queryParameters: Record<string, string> | null;
 };
 

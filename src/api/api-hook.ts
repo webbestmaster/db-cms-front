@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState, useMemo} from 'react';
 
-// import {useRefreshId} from '../util/hook';
+import {useRefreshId} from '../util/hook';
 
 import {UseDocumentHookType, UseDocumentListHookType} from './api-hook-type';
 

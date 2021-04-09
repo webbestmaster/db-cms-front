@@ -1,8 +1,7 @@
-// import {useCallback, useState} from 'react';
-//
-// import {getRandomString} from './string';
+import {useCallback, useState} from 'react';
 
-/*
+import {getRandomString} from './string';
+
 export function useRefreshId(): {refreshId: string; refresh: () => void} {
     const [refreshId, setRefreshId] = useState<string>(getRandomString());
 
@@ -10,7 +9,6 @@ export function useRefreshId(): {refreshId: string; refresh: () => void} {
 
     return {refreshId, refresh};
 }
-*/
 
 /*
 export function useUpdaterInList<ItemType>(

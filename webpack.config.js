@@ -12,7 +12,7 @@ const {
 } = require('./webpack/config');
 
 const webpackConfig = {
-    entry: ['./src/css/root.scss', './src/root.tsx'],
+    entry: ['./src/css/root.scss', 'antd/dist/antd.css', './src/root.tsx'],
     output: {
         path: path.join(cwd, pathToDist),
         publicPath: `${isDevelopment ? '/' : pathToStaticFileFolder}`,
