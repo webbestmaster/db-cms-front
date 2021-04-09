@@ -1,27 +1,11 @@
-export type ModelNameIdType = 'user-model';
+import {
+    DocumentListType,
+    ModelNameIdType,
+    ReadDocumentListParametersType,
+    ReadDocumentListResultType,
+} from './api-type';
 
-export type CrudResponseType<ModelType> = {
-    data: ModelType | Array<ModelType> | null;
-    size: number;
-};
-
-export type ReadDocumentListParametersType = {
-    pageIndex: number;
-    objectsPerPage: number;
-    queryParameters: Record<string, string> | null;
-};
-
-export type ReadDocumentListResultType<ModelType> = {
-    data: Array<ModelType>;
-    size: number;
-};
-
-export type DocumentListType<ModelType> = {
-    data: Array<ModelType>;
-    size: number;
-};
-
-export type UseHookType<HookData> = {
+type UseHookType<HookData> = {
     isInProgress: boolean;
     processError: Error | null;
     result: HookData | null;
@@ -29,3 +13,22 @@ export type UseHookType<HookData> = {
     // refreshId: string;
     reset: () => void;
 };
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+type CRUDMethodType<ModelDataType> = {
+    createDocument: (modelNameId: ModelNameIdType, modelData: ModelDataType) => Promise<ModelDataType>;
+    readDocumentById: (modelNameId: ModelNameIdType, objectId: string) => Promise<ModelDataType>;
+};
+
+export type UseDocumentHookType<HookModelType> = UseHookType<HookModelType> & CRUDMethodType<HookModelType>;
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+type CRUDListMethodType<ModelDataType> = {
+    readDocumentList: (
+        modelNameId: ModelNameIdType,
+        parameters: ReadDocumentListParametersType,
+    ) => Promise<ReadDocumentListResultType<ModelDataType>>;
+};
+
+export type UseDocumentListHookType<HookModelType> = UseHookType<DocumentListType<HookModelType>> &
+    CRUDListMethodType<HookModelType>;

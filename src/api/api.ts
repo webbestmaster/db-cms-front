@@ -7,7 +7,7 @@ import {
     ModelNameIdType,
     ReadDocumentListParametersType,
     ReadDocumentListResultType,
-} from './api-hook-type';
+} from './api-type';
 
 export function createDocument<ModelType>(modelNameId: ModelNameIdType, modelData: ModelType): Promise<ModelType> {
     return fetchX<CrudResponseType<ModelType>>('/db-cms/api/crud/create/' + modelNameId, {
