@@ -1,3 +1,5 @@
+export type ModelNameIdType = 'user-model';
+
 export type UseHookType<HookData> = {
     isInProgress: boolean;
     processError: Error | null;

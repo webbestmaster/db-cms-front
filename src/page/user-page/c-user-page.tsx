@@ -9,9 +9,13 @@ type UserModelType = {
 };
 
 export function UserPage(): JSX.Element {
-    const {createDocument, isInProgress} = useDocumentHook<UserModelType>();
+    const {createDocument, isInProgress, readDocumentById} = useDocumentHook<UserModelType>();
 
     console.log('isInProgress', isInProgress);
+
+    setTimeout(() => {
+        readDocumentById('user-model', 'sdss').then(console.log);
+    }, 3000);
 
     return (
         <div>
@@ -28,6 +32,7 @@ export function UserPage(): JSX.Element {
                         .catch((error: Error) => {
                             console.error(error);
                         });
+
                     console.info('post request to create user, after that refresh table');
                 }}
                 type="button"

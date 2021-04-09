@@ -2,8 +2,8 @@ import {useCallback, useEffect, useState} from 'react';
 
 import {useRefreshId} from '../util/hook';
 
-import {UseHookType} from './api-hook-type';
-import {createDocument} from './api';
+import {ModelNameIdType, UseHookType} from './api-hook-type';
+import {createDocument, readDocumentById} from './api';
 
 type StateHooksType<DateType> = {
     isInProgress: boolean;
@@ -42,11 +42,13 @@ export function useApiHooks<DateType>(): StateHooksType<DateType> {
     };
 }
 
-type CreateDocumentType<CreatedModelType> = {
-    createDocument: (modelId: string, modelData: CreatedModelType) => Promise<CreatedModelType>;
+// eslint-disable-next-line @typescript-eslint/naming-convention
+type CRUDMethodType<CreatedModelType> = {
+    createDocument: (modelNameId: ModelNameIdType, modelData: CreatedModelType) => Promise<CreatedModelType>;
+    readDocumentById: (modelNameId: ModelNameIdType, objectId: string) => Promise<CreatedModelType>;
 };
 
-export function useDocumentHook<ModelType>(): UseHookType<ModelType> & CreateDocumentType<ModelType> {
+export function useDocumentHook<ModelType>(): UseHookType<ModelType> & CRUDMethodType<ModelType> {
     const {
         isInProgress,
         setIsInProgress,
@@ -59,10 +61,27 @@ export function useDocumentHook<ModelType>(): UseHookType<ModelType> & CreateDoc
         reset,
     } = useApiHooks<ModelType>();
 
-    function createDocumentInHook(modelId: string, modelData: ModelType): Promise<ModelType> {
+    function createDocumentInHook(modelNameId: ModelNameIdType, modelData: ModelType): Promise<ModelType> {
         setIsInProgress(true);
 
-        return createDocument<ModelType>(modelId, modelData)
+        return createDocument<ModelType>(modelNameId, modelData)
+            .then(
+                (data: ModelType): ModelType => {
+                    setResult(data);
+                    return data;
+                }
+            )
+            .finally(() => setIsInProgress(false))
+            .catch((error: Error) => {
+                setProcessError(error);
+                throw error;
+            });
+    }
+
+    function readDocumentByIdInHook(modelNameId: ModelNameIdType, objectId: string): Promise<ModelType> {
+        setIsInProgress(true);
+
+        return readDocumentById<ModelType>(modelNameId, objectId)
             .then(
                 (data: ModelType): ModelType => {
                     setResult(data);
@@ -84,5 +103,6 @@ export function useDocumentHook<ModelType>(): UseHookType<ModelType> & CreateDoc
         refreshId,
         reset,
         createDocument: createDocumentInHook,
+        readDocumentById: readDocumentByIdInHook,
     };
 }
