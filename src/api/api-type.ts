@@ -1,3 +1,5 @@
+import {FiltersDataType, TableSortingType} from '../util/antd-table';
+
 export type ModelNameIdType = 'user-model';
 
 export type CrudResponseType<ModelType> = {
@@ -8,7 +10,8 @@ export type CrudResponseType<ModelType> = {
 export type ReadDocumentListParametersType = {
     pageIndex: number;
     pageSize: number;
-    sort: Record<string, 1 | -1>;
+    sort: TableSortingType;
+    filters: FiltersDataType;
     // queryParameters: Record<string, string> | null;
 };
 

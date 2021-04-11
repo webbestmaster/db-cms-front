@@ -2,8 +2,7 @@ import React, {useEffect, useState, useCallback} from 'react';
 import {Transfer, Switch, Table, TablePaginationConfig, Checkbox, Select} from 'antd';
 
 import {useDocumentHook, useDocumentListHook} from '../../api/api-hook';
-import {TableSortingType} from '../../util/type';
-import {FiltersDataType, getFiltersData, getOrderNumber} from '../../util/antd-table';
+import {TableSortingType, FiltersDataType, getFiltersData, getOrderNumber} from '../../util/antd-table';
 
 type UserModelType = {
     userId: string;
@@ -11,7 +10,7 @@ type UserModelType = {
     password: string;
 };
 
-const defaultSorting: TableSortingType = {field: 'userId', order: 1};
+const defaultSorting: TableSortingType = {userId: 1};
 
 export function UserPage(): JSX.Element {
     const documentHook = useDocumentHook<UserModelType>();
@@ -21,7 +20,7 @@ export function UserPage(): JSX.Element {
         isInProgress: isInProgressDocumentList,
     } = useDocumentListHook<UserModelType>();
     const [pagination, setPagination] = useState<TablePaginationConfig>({current: 1, pageSize: 10});
-    const [sorting, setSorting] = useState<TableSortingType>(defaultSorting);
+    const [sort, setSort] = useState<TableSortingType>(defaultSorting);
     const [filters, setFilters] = useState<FiltersDataType>({});
 
     console.log('documentHook.isInProgress', documentHook.isInProgress);
@@ -32,10 +31,10 @@ export function UserPage(): JSX.Element {
         readDocumentList('user-model', {
             pageIndex: Number(pagination.current) - 1,
             pageSize: Number(pagination.pageSize),
-            sort: {[sorting.field]: sorting.order},
-            // queryParameters: {['sort[' + sorting.field + ']']: `${sorting.order}`},
+            sort,
+            filters,
         });
-    }, [readDocumentList, pagination, sorting]);
+    }, [readDocumentList, pagination, sort, filters]);
 
     const onChange = useCallback(
         (newPagination, newFilters: Record<string, unknown>, newSorter, newExtra) => {
@@ -47,20 +46,18 @@ export function UserPage(): JSX.Element {
 
             console.log('newFilters', newFilters);
 
-            const filtersData = getFiltersData(newFilters);
-
-            console.log('filtersData', filtersData);
+            setFilters(getFiltersData(newFilters));
 
             console.log('newSorter', newSorter);
 
             const orderNumber = getOrderNumber(newSorter.order);
 
-            setSorting(orderNumber ? {field: newSorter.field, order: orderNumber} : defaultSorting);
+            setSort(orderNumber ? {[newSorter.field]: orderNumber} : defaultSorting);
 
             console.log('newExtra', newExtra);
             console.log('-----------');
         },
-        [setPagination]
+        [setPagination, setFilters]
     );
 
     return (
@@ -75,7 +72,7 @@ export function UserPage(): JSX.Element {
                         })
                         .then((user: UserModelType) => {
                             console.log(user);
-                            setSorting({field: 'userId', order: -1});
+                            setSort({userId: -1});
                             // refresh();
                         })
                         .catch((error: Error) => {

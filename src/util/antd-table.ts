@@ -1,3 +1,5 @@
+export type TableSortingType = Record<string, 1 | -1>; // { [key: string]: 1 | -1 };
+
 export function getOrderNumber(order: unknown): -1 | 0 | 1 {
     if (order === 'ascend') {
         return 1;
@@ -21,7 +23,7 @@ export function getFiltersData(filters: Record<string, unknown>): FiltersDataTyp
         (accum: FiltersDataType, filterKey: string): FiltersDataType => {
             const filterData = filters[filterKey];
 
-            if (Array.isArray(filterData)) {
+            if (Array.isArray(filterData) && filterData.length > 0) {
                 return {
                     ...accum,
                     [filterKey]: filterData,
