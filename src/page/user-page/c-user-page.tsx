@@ -21,7 +21,7 @@ export function UserPage(): JSX.Element {
     } = useDocumentListHook<UserModelType>();
     const [pagination, setPagination] = useState<TablePaginationConfig>({current: 1, pageSize: 10});
     const [sort, setSort] = useState<TableSortingType>(defaultSorting);
-    const [filters, setFilters] = useState<FiltersDataType>({});
+    // const [filters, setFilters] = useState<FiltersDataType>({});
 
     console.log('documentHook.isInProgress', documentHook.isInProgress);
     console.log('documentListHook.isInProgress', isInProgressDocumentList);
@@ -32,9 +32,8 @@ export function UserPage(): JSX.Element {
             pageIndex: Number(pagination.current) - 1,
             pageSize: Number(pagination.pageSize),
             sort,
-            filters,
         });
-    }, [readDocumentList, pagination, sort, filters]);
+    }, [readDocumentList, pagination, sort]);
 
     const onChange = useCallback(
         (newPagination, newFilters: Record<string, unknown>, newSorter, newExtra) => {
@@ -46,7 +45,7 @@ export function UserPage(): JSX.Element {
 
             console.log('newFilters', newFilters);
 
-            setFilters(getFiltersData(newFilters));
+            // setFilters(getFiltersData(newFilters));
 
             console.log('newSorter', newSorter);
 
@@ -57,7 +56,7 @@ export function UserPage(): JSX.Element {
             console.log('newExtra', newExtra);
             console.log('-----------');
         },
-        [setPagination, setFilters]
+        [setPagination]
     );
 
     return (
@@ -101,20 +100,24 @@ export function UserPage(): JSX.Element {
                         dataIndex: 'userId',
                         align: 'left',
                         sorter: true,
+/*
                         filters: [
                             {text: 'id is 123123', value: '123123'},
                             {text: 'id is 1231234', value: '1231234'},
                         ],
+*/
                     },
                     {
                         title: 'Name',
                         dataIndex: 'login',
                         align: 'left',
                         sorter: true,
+/*
                         filters: [
                             {text: 'the admin', value: 'admin'},
                             {text: 'это админ', value: 'админ'},
                         ],
+*/
                     },
                 ]}
                 dataSource={resultDocumentList?.data.map(user => ({

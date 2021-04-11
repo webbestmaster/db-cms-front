@@ -65,6 +65,12 @@ export function readDocumentList<ModelType>(
         .map((sortKey: string): string => `sort[${sortKey}]=${sort[sortKey]}`)
         .join('&');
 
+    /*
+        const filtersQueryParameters: string = Object.keys(filters)
+            .map((filterKey: string): string => `sort[${sortKey}]=${sort[sortKey]}`)
+            .join('&');
+    */
+
     const queryParametersAsString = sortQueryParameters ? '?' + sortQueryParameters : '';
 
     const url = `/db-cms/api/crud/read-list/${modelNameId}/${pageIndex}/${pageSize}${queryParametersAsString}`;

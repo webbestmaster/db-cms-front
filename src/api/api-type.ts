@@ -11,7 +11,7 @@ export type ReadDocumentListParametersType = {
     pageIndex: number;
     pageSize: number;
     sort: TableSortingType;
-    filters: FiltersDataType;
+    // filters: FiltersDataType;
     // queryParameters: Record<string, string> | null;
 };
 
