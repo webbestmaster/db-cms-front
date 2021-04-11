@@ -85,3 +85,34 @@ export function readDocumentList<ModelType>(
         }
     );
 }
+
+export function updateDocument<ModelType>(modelNameId: ModelNameIdType, modelData: ModelType): Promise<ModelType> {
+    return fetchX<CrudResponseType<ModelType>>('/db-cms/api/crud/update/' + modelNameId, {
+        method: 'POST',
+        body: JSON.stringify(modelData),
+    }).then(
+        (result: CrudResponseType<ModelType>): ModelType => {
+            const {data} = result;
+
+            if (Array.isArray(data)) {
+                throw new TypeError(JSON.stringify(result));
+            }
+
+            if (!data) {
+                throw new Error(
+                    `Can not update document, modelNameId: ${modelNameId}, modelData: ${JSON.stringify(modelData)}`
+                );
+            }
+
+            return data;
+        }
+    );
+}
+
+export function deleteDocument(modelNameId: ModelNameIdType, objectId: string): Promise<unknown> {
+    return fetchX<unknown>('/db-cms/api/crud/delete/' + modelNameId + '/' + objectId, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {'Content-Type': 'application/json'},
+    });
+}

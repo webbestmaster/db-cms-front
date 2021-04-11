@@ -3,7 +3,7 @@ import {Transfer, Switch, Table, TablePaginationConfig, Checkbox, Select} from '
 
 import {useDocumentHook, useDocumentListHook} from '../../api/api-hook';
 import {TableSortingType} from '../../util/type';
-import {getOrderNumber} from '../../util/table';
+import {getOrderNumber} from '../../util/antd-table';
 
 type UserModelType = {
     userId: string;

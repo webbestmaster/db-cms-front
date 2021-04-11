@@ -11,7 +11,7 @@ import {
     ReadDocumentListResultType,
 } from './api-type';
 
-import {createDocument, readDocumentById, readDocumentList} from './api';
+import {createDocument, readDocumentById, readDocumentList, updateDocument, deleteDocument} from './api';
 
 type StateHooksType<DateType> = {
     isInProgress: boolean;
@@ -105,6 +105,40 @@ export function useDocumentHook<ModelType>(): UseDocumentHookType<ModelType> {
         [setIsInProgress, setProcessError, setResult]
     );
 
+    const updateDocumentInHook = useCallback(
+        (modelNameId: ModelNameIdType, modelData: ModelType): Promise<ModelType> => {
+            setIsInProgress(true);
+
+            return updateDocument<ModelType>(modelNameId, modelData)
+                .then(
+                    (data: ModelType): ModelType => {
+                        setResult(data);
+                        return data;
+                    }
+                )
+                .finally(() => setIsInProgress(false))
+                .catch((error: Error) => {
+                    setProcessError(error);
+                    throw error;
+                });
+        },
+        [setIsInProgress, setProcessError, setResult]
+    );
+
+    const deleteDocumentInHook = useCallback(
+        (modelNameId: ModelNameIdType, objectId: string): Promise<unknown> => {
+            setIsInProgress(true);
+
+            return deleteDocument(modelNameId, objectId)
+                .finally(() => setIsInProgress(false))
+                .catch((error: Error) => {
+                    setProcessError(error);
+                    throw error;
+                });
+        },
+        [setIsInProgress, setProcessError]
+    );
+
     // return useMemo((): UseDocumentHookType<ModelType> => {
     return {
         isInProgress,
@@ -115,6 +149,8 @@ export function useDocumentHook<ModelType>(): UseDocumentHookType<ModelType> {
         reset,
         createDocument: createDocumentInHook,
         readDocumentById: readDocumentByIdInHook,
+        updateDocument: updateDocumentInHook,
+        deleteDocument: deleteDocumentInHook,
     };
     // }, [createDocumentInHook, isInProgress, processError, readDocumentByIdInHook, reset, result]);
 }

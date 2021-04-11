@@ -18,6 +18,8 @@ type UseHookType<HookData> = {
 type CRUDMethodType<ModelDataType> = {
     createDocument: (modelNameId: ModelNameIdType, modelData: ModelDataType) => Promise<ModelDataType>;
     readDocumentById: (modelNameId: ModelNameIdType, objectId: string) => Promise<ModelDataType>;
+    updateDocument: (modelNameId: ModelNameIdType, modelData: ModelDataType) => Promise<ModelDataType>;
+    deleteDocument: (modelNameId: ModelNameIdType, objectId: string) => Promise<unknown>;
 };
 
 export type UseDocumentHookType<HookModelType> = UseHookType<HookModelType> & CRUDMethodType<HookModelType>;
