@@ -2,7 +2,8 @@ import React, {useEffect, useState, useCallback} from 'react';
 import {Transfer, Switch, Table, TablePaginationConfig, Checkbox, Select} from 'antd';
 
 import {useDocumentHook, useDocumentListHook} from '../../api/api-hook';
-// import {useRefreshId} from '../../util/hook';
+import {TableSortingType} from '../../util/type';
+import {getOrderNumber} from '../../util/table';
 
 type UserModelType = {
     userId: string;
@@ -10,24 +11,21 @@ type UserModelType = {
     password: string;
 };
 
+const defaultSorting: TableSortingType = {field: 'userId', order: 1};
+
 export function UserPage(): JSX.Element {
     const documentHook = useDocumentHook<UserModelType>();
-    // const {refreshId, refresh} = useRefreshId();
-
     const {
         readDocumentList,
         result: resultDocumentList,
         isInProgress: isInProgressDocumentList,
     } = useDocumentListHook<UserModelType>();
     const [pagination, setPagination] = useState<TablePaginationConfig>({current: 1, pageSize: 10});
-    const [sorting, setSorting] = useState<{field: string; order: 1 | -1}>({field: 'userId', order: 1});
+    const [sorting, setSorting] = useState<TableSortingType>(defaultSorting);
 
     console.log('documentHook.isInProgress', documentHook.isInProgress);
     console.log('documentListHook.isInProgress', isInProgressDocumentList);
     console.log('resultDocumentList', resultDocumentList);
-
-    console.log('pagination');
-    console.log(pagination);
 
     useEffect(() => {
         readDocumentList('user-model', {
@@ -45,12 +43,9 @@ export function UserPage(): JSX.Element {
             console.log('newFilters', newFilters);
             console.log('newSorter', newSorter);
 
-            // setSorting({field: newSorter.field, order: newSorter.order === 'descend' ? 1 : -1});
+            const orderNumber = getOrderNumber(newSorter.order);
 
-            // const isAscend = newSorter.order === 'ascend';
-            // const isDescend = newSorter.order === 'descend';
-
-            setSorting({field: newSorter.field, order: newSorter.order === 'descend' ? -1 : 1});
+            setSorting(orderNumber ? {field: newSorter.field, order: orderNumber} : defaultSorting);
 
             console.log('newExtra', newExtra);
             console.log('-----------');
