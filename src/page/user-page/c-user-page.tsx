@@ -3,7 +3,7 @@ import {Transfer, Switch, Table, TablePaginationConfig, Checkbox, Select} from '
 
 import {useDocumentHook, useDocumentListHook} from '../../api/api-hook';
 import {TableSortingType} from '../../util/type';
-import {getOrderNumber} from '../../util/antd-table';
+import {FiltersDataType, getFiltersData, getOrderNumber} from '../../util/antd-table';
 
 type UserModelType = {
     userId: string;
@@ -22,6 +22,7 @@ export function UserPage(): JSX.Element {
     } = useDocumentListHook<UserModelType>();
     const [pagination, setPagination] = useState<TablePaginationConfig>({current: 1, pageSize: 10});
     const [sorting, setSorting] = useState<TableSortingType>(defaultSorting);
+    const [filters, setFilters] = useState<FiltersDataType>({});
 
     console.log('documentHook.isInProgress', documentHook.isInProgress);
     console.log('documentListHook.isInProgress', isInProgressDocumentList);
@@ -31,16 +32,25 @@ export function UserPage(): JSX.Element {
         readDocumentList('user-model', {
             pageIndex: Number(pagination.current) - 1,
             pageSize: Number(pagination.pageSize),
-            queryParameters: {['sort[' + sorting.field + ']']: `${sorting.order}`},
+            sort: {[sorting.field]: sorting.order},
+            // queryParameters: {['sort[' + sorting.field + ']']: `${sorting.order}`},
         });
     }, [readDocumentList, pagination, sorting]);
 
     const onChange = useCallback(
-        (newPagination, newFilters, newSorter, newExtra) => {
-            setPagination(newPagination);
+        (newPagination, newFilters: Record<string, unknown>, newSorter, newExtra) => {
             console.log('-----------');
+
             console.log('newPagination', newPagination);
+
+            setPagination(newPagination);
+
             console.log('newFilters', newFilters);
+
+            const filtersData = getFiltersData(newFilters);
+
+            console.log('filtersData', filtersData);
+
             console.log('newSorter', newSorter);
 
             const orderNumber = getOrderNumber(newSorter.order);
@@ -89,8 +99,26 @@ export function UserPage(): JSX.Element {
 
             <Table<{userId: string; login: string; key: string}>
                 columns={[
-                    {title: 'ID', dataIndex: 'userId', align: 'left', sorter: {}},
-                    {title: 'Name', dataIndex: 'login', align: 'left', sorter: {}},
+                    {
+                        title: 'ID',
+                        dataIndex: 'userId',
+                        align: 'left',
+                        sorter: true,
+                        filters: [
+                            {text: 'id is 123123', value: '123123'},
+                            {text: 'id is 1231234', value: '1231234'},
+                        ],
+                    },
+                    {
+                        title: 'Name',
+                        dataIndex: 'login',
+                        align: 'left',
+                        sorter: true,
+                        filters: [
+                            {text: 'the admin', value: 'admin'},
+                            {text: 'это админ', value: 'админ'},
+                        ],
+                    },
                 ]}
                 dataSource={resultDocumentList?.data.map(user => ({
                     userId: user.userId,

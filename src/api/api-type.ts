@@ -8,7 +8,8 @@ export type CrudResponseType<ModelType> = {
 export type ReadDocumentListParametersType = {
     pageIndex: number;
     pageSize: number;
-    queryParameters: Record<string, string> | null;
+    sort: Record<string, 1 | -1>;
+    // queryParameters: Record<string, string> | null;
 };
 
 export type ReadDocumentListResultType<ModelType> = {
