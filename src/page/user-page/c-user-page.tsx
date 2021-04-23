@@ -1,14 +1,14 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {Transfer, Switch, Table, TablePaginationConfig, Checkbox, Select} from 'antd';
 
+import {generatePath, useParams, Link} from 'react-router-dom';
+import {ExtractRouteParams} from 'react-router';
+
+import {appRoute} from '../../app-route';
 import {useDocumentHook, useDocumentListHook} from '../../api/api-hook';
 import {TableSortingType, FiltersDataType, getFiltersData, getOrderNumber} from '../../util/antd-table';
 
-type UserModelType = {
-    userId: string;
-    login: string;
-    password: string;
-};
+import {UserModelType} from './user-page-type';
 
 const defaultSorting: TableSortingType = {userId: 1};
 
@@ -87,13 +87,7 @@ export function UserPage(): JSX.Element {
 
             <h1>table with users</h1>
 
-            {/*
-            <div>
-                <pre>{JSON.stringify(resultDocumentList, null, 4)}</pre>
-            </div>
-*/}
-
-            <Table<{userId: string; login: string; key: string}>
+            <Table<{userId: JSX.Element; login: string; key: string}>
                 columns={[
                     {
                         title: 'ID',
@@ -123,7 +117,7 @@ export function UserPage(): JSX.Element {
                     },
                 ]}
                 dataSource={resultDocumentList?.data.map(user => ({
-                    userId: user.userId,
+                    userId: <Link to={generatePath(appRoute.userEdit.path, {userId: user.userId})}>{user.userId}</Link>,
                     login: user.login,
                     key: user.userId,
                 }))}

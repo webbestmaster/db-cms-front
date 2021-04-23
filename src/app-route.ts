@@ -5,4 +5,7 @@ export const appRoute = {
     user: {
         path: '/user',
     },
+    userEdit: {
+        path: '/user-edit/:userId' as const,
+    },
 };
