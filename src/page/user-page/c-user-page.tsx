@@ -100,7 +100,8 @@ export function UserPage(): JSX.Element {
                         dataIndex: 'userId',
                         align: 'left',
                         sorter: true,
-/*
+
+                        /*
                         filters: [
                             {text: 'id is 123123', value: '123123'},
                             {text: 'id is 1231234', value: '1231234'},
@@ -112,7 +113,8 @@ export function UserPage(): JSX.Element {
                         dataIndex: 'login',
                         align: 'left',
                         sorter: true,
-/*
+
+                        /*
                         filters: [
                             {text: 'the admin', value: 'admin'},
                             {text: 'это админ', value: 'админ'},
