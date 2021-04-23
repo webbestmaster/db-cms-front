@@ -141,6 +141,8 @@ export function UserPageEdit(): JSX.Element {
                     />
 
                     <img alt="" height="100" src={'/folder-for-files/' + result.avatar} width="100"/>
+
+                    <img alt="" height="100" src={'/image/90x60/' + result.avatar} width="100"/>
                 </div>
 
                 <Button htmlType="submit" type="primary">
