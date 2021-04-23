@@ -21,6 +21,7 @@ const userModel: ModelConfigType = {
             login: {type: 'string', required: true},
             password: {type: 'string', required: true},
             tagList: {type: 'array', items: {type: 'number'}, required: true},
+            avatar: {type: 'string', required: true},
         },
     },
     keyId: 'userId',

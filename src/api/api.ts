@@ -1,4 +1,4 @@
-/* global URLSearchParams */
+/* global fetch, URLSearchParams, File, FormData, Response */
 
 import {fetchX} from '../util/fetch';
 
@@ -123,4 +123,15 @@ export function deleteDocument(modelNameId: ModelNameIdType, objectId: string): 
         credentials: 'include',
         headers: {'Content-Type': 'application/json'},
     });
+}
+
+export function fileUpload(file: File): Promise<string> {
+    const formData = new FormData();
+
+    // you can add file name as 3rd parameter
+    formData.append('file', file);
+
+    return fetch('/db-cms/api/file/upload', {method: 'POST', credentials: 'include', body: formData}).then(
+        (data: Response): Promise<string> => data.json()
+    );
 }

@@ -1,4 +1,6 @@
-import React, {useEffect} from 'react';
+/* global File, HTMLInputElement */
+
+import React, {useEffect, SyntheticEvent} from 'react';
 import {generatePath, useParams} from 'react-router-dom';
 import {ExtractRouteParams} from 'react-router';
 import {
@@ -17,7 +19,7 @@ import {
 } from 'antd';
 
 import {appRoute} from '../../app-route';
-import {useDocumentHook, useDocumentListHook} from '../../api/api-hook';
+import {useDocumentHook, useDocumentListHook, useFileHook} from '../../api/api-hook';
 import {requiredFieldRule} from '../../util/form';
 import {trim} from '../../util/string';
 
@@ -28,6 +30,7 @@ export function UserPageEdit(): JSX.Element {
     const [form] = Form.useForm();
 
     const {readDocumentById, updateDocument, isInProgress, result} = useDocumentHook<UserModelType>();
+    const {uploadFile} = useFileHook();
 
     useEffect(() => {
         readDocumentById('user-model', userId);
@@ -37,8 +40,9 @@ export function UserPageEdit(): JSX.Element {
         const login = form.getFieldValue('login') || '';
         const password = form.getFieldValue('password') || '';
         const tagList = (form.getFieldValue('tag-list') || '').split(',').map(trim).filter(Boolean);
+        const avatar = form.getFieldValue('avatar') || '';
 
-        return {login, password, userId, tagList};
+        return {login, password, userId, tagList, avatar};
     }
 
     /*
@@ -106,6 +110,38 @@ export function UserPageEdit(): JSX.Element {
                 >
                     <Input/>
                 </Form.Item>
+
+                <div>
+                    <Form.Item label="User's avatar" name="avatar">
+                        <Input/>
+                    </Form.Item>
+
+                    <input
+                        onChange={(evt: SyntheticEvent<HTMLInputElement>) => {
+                            const input = evt.currentTarget;
+                            const {files} = input;
+
+                            if (!files) {
+                                return;
+                            }
+
+                            const [file] = files;
+
+                            if (!file) {
+                                return;
+                            }
+
+                            uploadFile(file)
+                                .then((fileName: string) => {
+                                    form.setFieldsValue({avatar: fileName});
+                                })
+                                .catch(console.error);
+                        }}
+                        type="file"
+                    />
+
+                    <img alt="" height="100" src={result.avatar} width="100"/>
+                </div>
 
                 <Button htmlType="submit" type="primary">
                     Update

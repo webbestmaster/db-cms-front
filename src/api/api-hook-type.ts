@@ -1,3 +1,5 @@
+/* global File */
+
 import {
     DocumentListType,
     ModelNameIdType,
@@ -34,3 +36,5 @@ type CRUDListMethodType<ModelDataType> = {
 
 export type UseDocumentListHookType<HookModelType> = UseHookType<DocumentListType<HookModelType>> &
     CRUDListMethodType<HookModelType>;
+
+export type UseFileHookType = UseHookType<string> & {uploadFile: (file: File) => Promise<string>};

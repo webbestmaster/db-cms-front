@@ -3,4 +3,5 @@ export type UserModelType = {
     login: string;
     password: string;
     tagList: Array<string>;
+    avatar: string;
 };

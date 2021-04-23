@@ -1,8 +1,10 @@
+/* global File */
+
 import {useCallback, useEffect, useState, useMemo} from 'react';
 
 import {useRefreshId} from '../util/hook';
 
-import {UseDocumentHookType, UseDocumentListHookType} from './api-hook-type';
+import {UseDocumentHookType, UseDocumentListHookType, UseFileHookType} from './api-hook-type';
 
 import {
     DocumentListType,
@@ -11,7 +13,7 @@ import {
     ReadDocumentListResultType,
 } from './api-type';
 
-import {createDocument, readDocumentById, readDocumentList, updateDocument, deleteDocument} from './api';
+import {createDocument, readDocumentById, readDocumentList, updateDocument, deleteDocument, fileUpload} from './api';
 
 type StateHooksType<DateType> = {
     isInProgress: boolean;
@@ -202,4 +204,42 @@ export function useDocumentListHook<ModelType>(): UseDocumentListHookType<ModelT
         readDocumentList: readDocumentListInHook,
     };
     // }, [isInProgress, processError, readDocumentListInHook, reset, result]);
+}
+
+export function useFileHook(): UseFileHookType {
+    const {
+        isInProgress,
+        setIsInProgress,
+        processError,
+        setProcessError,
+        result,
+        setResult,
+        // refreshId,
+        // refresh,
+        reset,
+    } = useApiHooks<string>();
+
+    const fileUploadInHook: (file: File) => Promise<string> = useCallback(
+        (file: File): Promise<string> => {
+            setIsInProgress(true);
+
+            return fileUpload(file)
+                .finally(() => setIsInProgress(false))
+                .catch((error: Error) => {
+                    setProcessError(error);
+                    throw error;
+                });
+        },
+        [setIsInProgress, setProcessError]
+    );
+
+    return {
+        isInProgress,
+        processError,
+        result,
+        // refresh,
+        // refreshId,
+        reset,
+        uploadFile: fileUploadInHook,
+    };
 }
