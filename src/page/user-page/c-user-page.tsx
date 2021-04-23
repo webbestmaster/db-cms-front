@@ -68,6 +68,7 @@ export function UserPage(): JSX.Element {
                             userId: String(Date.now()),
                             password: 'pass',
                             login: String(Date.now() + '-my-login'),
+                            tagList: [],
                         })
                         .then((user: UserModelType) => {
                             console.log(user);

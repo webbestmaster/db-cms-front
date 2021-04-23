@@ -17,6 +17,10 @@ export function getRandomString(): string {
     return getHash(String(Date.now() + Math.random()));
 }
 
+export function trim(value: string): string {
+    return value.trim();
+}
+
 /*
 
 export function findString(input: string, searchQuery: string, flags: '' | 'g' | 'gi' = 'gi'): Array<string> {

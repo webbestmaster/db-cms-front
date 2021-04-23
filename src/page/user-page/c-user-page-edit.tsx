@@ -19,6 +19,7 @@ import {
 import {appRoute} from '../../app-route';
 import {useDocumentHook, useDocumentListHook} from '../../api/api-hook';
 import {requiredFieldRule} from '../../util/form';
+import {trim} from '../../util/string';
 
 import {UserModelType} from './user-page-type';
 
@@ -35,8 +36,9 @@ export function UserPageEdit(): JSX.Element {
     function getUserData(): UserModelType {
         const login = form.getFieldValue('login') || '';
         const password = form.getFieldValue('password') || '';
+        const tagList = (form.getFieldValue('tag-list') || '').split(',').map(trim).filter(Boolean);
 
-        return {login, password, userId};
+        return {login, password, userId, tagList};
     }
 
     /*
@@ -93,6 +95,14 @@ export function UserPageEdit(): JSX.Element {
                     label="User's password"
                     name="password"
                     rules={[requiredFieldRule]}
+                >
+                    <Input/>
+                </Form.Item>
+
+                <Form.Item
+                    initialValue={result.tagList.join(', ')}
+                    label="User's tag list, use ',' to separate"
+                    name="tag-list"
                 >
                     <Input/>
                 </Form.Item>
