@@ -1,6 +1,6 @@
 # dist
 /dist
-db-cms-front-static-files
+/site-front-static-files
 
 # npm
 node_modules

@@ -12,6 +12,10 @@ package-lock.json
 
 # dist
 /dist
+/cms/dist
+/site/front-end/dist
+/cms/db-cms-front-static-files
+/site/front-end/site-front-static-files
 
 # report
 /coverage-ts

@@ -6,7 +6,7 @@ const modeDevelopmentName = 'development';
 const modeProductionName = 'production';
 
 const nodeEnvironment = process.env.NODE_ENV || modeDevelopmentName;
-const pathToStaticFileFolder = '/db-cms-front-static-files/'; // '/static';
+const pathToStaticFileFolder = '/site-front-static-files/'; // '/static';
 
 module.exports.nodeEnvironment = nodeEnvironment;
 
@@ -21,4 +21,4 @@ module.exports.pathToStaticFileFolder = pathToStaticFileFolder;
 
 module.exports.pathToDist = pathToStaticFileFolder;
 
-module.exports.webpackDevServerPort = 9091;
+module.exports.webpackDevServerPort = 9090;

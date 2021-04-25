@@ -1,12 +1,10 @@
 {
     "compilerOptions": {
         "outDir": "./dist/",
-
         "target": "es6",
         "jsx": "react",
         "module": "es6",
         "moduleResolution": "node",
-
         "noImplicitAny": false,
         "strictNullChecks": true,
         "strictFunctionTypes": true,
@@ -33,7 +31,7 @@
         "allowJs": true,
         "declaration": false,
         "experimentalDecorators": false,
-        "emitDecoratorMetadata": false,
+        "emitDecoratorMetadata": false
     },
     "exclude": [
         "./dist",
