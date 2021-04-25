@@ -1,7 +1,7 @@
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
-const {isDevelopment, fileRegExp} = require('./../config');
+const {isDevelopment, fileRegExp} = require('../config');
 
 module.exports.optimization = isDevelopment
     ? {

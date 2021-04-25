@@ -14,9 +14,9 @@ const {
 const webpackConfig = {
     entry: ['./src/css/root.scss', 'antd/dist/antd.css', './src/root.tsx'],
     output: {
-        path: path.join(cwd, pathToDist),
-        publicPath: `${isDevelopment ? '/' : pathToStaticFileFolder}`,
-        // publicPath: '',
+        // path: path.join(cwd, pathToDist),
+        path: path.join(cwd, pathToStaticFileFolder),
+        publicPath: pathToStaticFileFolder,
         filename: isDevelopment ? '[name].js' : 'index.js',
         chunkFilename: isDevelopment ? '[name].chunk.js' : '[name].[hash:6].chunk.js',
     },

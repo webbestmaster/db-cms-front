@@ -18,7 +18,7 @@ export function Routing(): JSX.Element {
     }
 
     return (
-        <BrowserRouter>
+        <BrowserRouter basename="db-cms-front-static-files">
             <Switch>
                 <Route component={WelcomePage} exact path={appRoute.root.path}/>
 

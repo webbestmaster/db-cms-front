@@ -1,4 +1,4 @@
-const {pathToDist, webpackDevServerPort} = require('./../config');
+const {pathToDist, webpackDevServerPort} = require('../config');
 
 const host = 'localhost';
 // const host = '192.168.147.45';

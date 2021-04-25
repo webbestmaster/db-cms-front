@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+
+    <title>Site</title>
+
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1">
+
+    <link rel="stylesheet" href="/assets/style.css"/>
+
+    <script src="assets/script-relative-path.js"></script>
+    <script src="/assets/script-absolute-path.js"></script>
+</head>
+<body>
+
+<h1>nginx works</h1>
+
+
+<button id="create">create</button>
+<button id="read">read</button>
+<button id="read-with-api-key">read with api key</button>
+<button id="read-list">read list</button>
+<button id="update">update</button>
+<button id="delete">delete</button>
+<br>
+<br>
+<!--<button id="get-config">get config</button>-->
+<button id="get-user">get user</button>
+<br>
+<br>
+<input type="file" id="upload-file"/>
+
+<script>
+    fetch('/api/auth/login', {
+        method: 'post',
+        credentials: 'include',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({login: 'admin', password: 'some-password'})
+    })
+        .then(data => data.json())
+        .then(result => console.log('login result:', result));
+</script>
+
+<script>
+
+    document
+        .querySelector('#create')
+        .addEventListener('click', () => {
+            fetch('/api/crud/create/user-model', {
+                method: 'post',
+                credentials: 'include',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({userId: '1615917636783', login: 'админ', password: String(Math.random())})
+            })
+                .then(data => data.json())
+                .then(result => console.log('create result:', result));
+        }, false);
+
+</script>
+
+<script>
+
+    document
+        .querySelector('#read')
+        .addEventListener('click', () => {
+            fetch('/api/crud/read/user-model/1615917636783', {
+                method: 'get',
+                credentials: 'include',
+                headers: {'Content-Type': 'application/json'}
+            })
+                .then(data => data.json())
+                .then(result => console.log('read result:', result));
+        }, false);
+
+</script>
+
+<script>
+
+    // no login required
+    document
+        .querySelector('#read-with-api-key')
+        .addEventListener('click', () => {
+            fetch('/api/crud/read/user-model/1615917636783', {
+                method: 'get',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-db-cms-api-key': 'some secret api key'
+                }
+            })
+                .then(data => data.json())
+                .then(result => console.log('read result:', result));
+        }, false);
+
+</script>
+
+<script>
+
+    document
+        .querySelector('#read-list')
+        .addEventListener('click', () => {
+            // fetch('/api/crud/read-list/user-model/1/4?sort[password]=-1&sort[userId]=1', {
+            // fetch(`/api/crud/read-list/user-model/0/4?sort[password]=-1&sort[userId]=1&find[login]=${JSON.stringify('админ')}`, {
+            fetch(
+                `/api/crud/read-list/user-model/0/4?sort[password]=-1&sort[userId]=1&find[login]=${JSON.stringify({
+                    "$regex": "адм",
+                    "$options": "i"
+                })}`,
+                {
+                    method: 'get',
+                    credentials: 'include',
+                    headers: {'Content-Type': 'application/json'}
+                })
+                .then(data => data.json())
+                .then(result => console.log('read-list result:', result));
+        }, false);
+
+</script>
+
+<script>
+
+    document
+        .querySelector('#update')
+        .addEventListener('click', () => {
+            fetch('/api/crud/update/user-model', {
+                method: 'post',
+                credentials: 'include',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({userId: '1615917636783', login: 'админ updated', password: String(Math.random())})
+            })
+                .then(data => data.json())
+                .then(result => console.log('update result:', result));
+        }, false);
+
+</script>
+
+<script>
+
+    document
+        .querySelector('#delete')
+        .addEventListener('click', () => {
+            fetch('/api/crud/delete/user-model/1615917636783', {
+                method: 'delete',
+                credentials: 'include',
+                headers: {'Content-Type': 'application/json'},
+            })
+                .then(data => data.json())
+                .then(result => console.log('delete result:', result));
+        }, false);
+
+</script>
+
+<!--
+<script>
+
+    document
+        .querySelector('#get-config')
+        .addEventListener('click', () => {
+            fetch('/api/main/config', {
+                method: 'get',
+                credentials: 'include',
+                headers: {'Content-Type': 'application/json'},
+            })
+                .then(data => data.json())
+                .then(result => console.log('get config result:', result));
+        }, false);
+
+</script>
+-->
+
+<script>
+
+    document
+        .querySelector('#get-user')
+        .addEventListener('click', () => {
+            fetch('/api/auth/user', {
+                method: 'get',
+                credentials: 'include',
+                headers: {'Content-Type': 'application/json'},
+            })
+                .then(data => data.json())
+                .then(result => console.log('get user result:', result));
+        }, false);
+
+</script>
+
+<script>
+
+    document
+        .querySelector('#upload-file')
+        .addEventListener('change', (evt) => {
+            console.log(evt)
+
+            const [file] = evt.currentTarget.files;
+
+            const formData = new FormData();
+
+            // you can add file name as 3rd parameter
+            formData.append('file', file);
+
+            fetch('/api/file/upload', {
+                method: 'post',
+                credentials: 'include',
+                body: formData
+            })
+                .then(data => data.json())
+                .then(result => console.log('upload result:', result));
+        }, false);
+
+</script>
+
+</body>
+</html>

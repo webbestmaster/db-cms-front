@@ -45,7 +45,7 @@ const documentModel: ModelConfigType = {
 
 const databaseCmsServerConfig: DatabaseCmsConfigType = {
     file: {
-        folder: 'folder-for-files',
+        folder: '../folder-for-files',
     },
     api: {
         prefix: '/db-cms',
