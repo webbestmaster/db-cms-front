@@ -1,0 +1,2 @@
+/* global File */
+export {};
