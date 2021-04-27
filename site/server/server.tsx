@@ -8,7 +8,6 @@ import {WelcomePage} from '../src/page/welcome-page/c-welcome-page';
 import {log} from './util/log';
 import {port} from './server-const';
 
-
 const app = express();
 
 app.listen(port, (): void => {
@@ -18,7 +17,11 @@ app.listen(port, (): void => {
         response.json({success: true});
     });
 
-    app.get('/api/html', (request: Request, response: Response) => {
+    app.get('/ssr/html', (request: Request, response: Response) => {
+        response.send(ReactDOMServer.renderToString(<WelcomePage/>));
+    });
+
+    app.use((request: Request, response: Response) => {
         response.send(ReactDOMServer.renderToString(<WelcomePage/>));
     });
 

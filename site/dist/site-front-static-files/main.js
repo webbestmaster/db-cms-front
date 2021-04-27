@@ -252,7 +252,7 @@
                 // fetch('/api/test-api')
                 //     .then((response: Response): unknown => response.json())
                 //     .then(console.log);
-                return react__WEBPACK_IMPORTED_MODULE_0__.createElement('div', null, react__WEBPACK_IMPORTED_MODULE_0__.createElement('h1', null, '1welcome'));
+                return react__WEBPACK_IMPORTED_MODULE_0__.createElement('div', null, react__WEBPACK_IMPORTED_MODULE_0__.createElement('h1', null, 'welcome'));
             }
             /***/
         },

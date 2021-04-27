@@ -7,7 +7,7 @@ export function WelcomePage(): JSX.Element {
 
     return (
         <div>
-            <h1>1welcome</h1>
+            <h1>welcome</h1>
         </div>
     );
 }

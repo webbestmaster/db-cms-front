@@ -10,7 +10,10 @@ app.listen(port, () => {
     app.get('/api/test-api', (request, response) => {
         response.json({ success: true });
     });
-    app.get('/api/html', (request, response) => {
+    app.get('/ssr/html', (request, response) => {
+        response.send(ReactDOMServer.renderToString(React.createElement(WelcomePage, null)));
+    });
+    app.use((request, response) => {
         response.send(ReactDOMServer.renderToString(React.createElement(WelcomePage, null)));
     });
     // ReactDOMServer.renderToString
